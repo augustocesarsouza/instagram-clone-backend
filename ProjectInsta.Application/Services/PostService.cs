@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using ProjectInsta.Application.CloudinaryAAA;
 using ProjectInsta.Application.DTOs;
 using ProjectInsta.Application.DTOs.Validations.PostValidator;
 using ProjectInsta.Application.Services.Interfaces;
@@ -19,9 +20,9 @@ namespace ProjectInsta.Application.Services
         private readonly ICommentService _commentService;
 
         private readonly Account _account = new Account(
-            "dyqsqg7pk",
-            "761272487963569",
-            "7jhjINCueUwZuXhKRhrknwJG_C0"
+            CloudinaryConfig.AccountName,
+            CloudinaryConfig.ApiKey,
+            CloudinaryConfig.ApiSecret
             );
 
         public PostService(IPostRepository postRepository, IUserRepostitory userRepostitory, IMapper mapper, IUnitOfWork unitOfWork, IPostLikeService postLikeService, ICommentService commentService)
@@ -71,7 +72,8 @@ namespace ProjectInsta.Application.Services
             if (!validator.IsValid)
                 return ResultService.RequestError<PostDTO>("Erro de validação verifique as informações necessarias", validator);
 
-            var cloudinary = new Cloudinary(_account);
+
+            var cloudinary = new Cloudinary();
 
             if (postDTO.Url.StartsWith("data:image"))
             //if (postDTO.IsImagem == 1) 
@@ -81,7 +83,7 @@ namespace ProjectInsta.Application.Services
                     File = new FileDescription(postDTO.Url),
                     //transformation = new transformation()
                     //.width(480)
-                    //.height(750)
+                    //.height(750)_account
                     //.crop("fill").quality(100),
                     Transformation = new Transformation().Width(1080).Height(1080).Crop("fill").Quality(100),
                 };

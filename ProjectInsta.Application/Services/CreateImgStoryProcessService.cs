@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet; // FileDescription, Transformation, TextLayer
 using CloudinaryDotNet.Actions; // VideoUploadParams, ImageUploadParams
+using ProjectInsta.Application.CloudinaryAAA;
 using ProjectInsta.Application.DTOs;
 using ProjectInsta.Application.Services.Interfaces;
 
@@ -8,9 +9,9 @@ namespace ProjectInsta.Application.Services
     public class CreateImgStoryProcessService : ICreateImgStoryProcess
     {
         private readonly Account _account = new Account(
-            "dyqsqg7pk",
-            "761272487963569",
-            "7jhjINCueUwZuXhKRhrknwJG_C0"
+            CloudinaryConfig.AccountName,
+            CloudinaryConfig.ApiKey,
+            CloudinaryConfig.ApiSecret
             );
 
         public static List<ProcessImgDTO> ProcessImgDTOs = new();

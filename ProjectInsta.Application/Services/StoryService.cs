@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using ProjectInsta.Application.CloudinaryAAA;
 using ProjectInsta.Application.DTOs;
 using ProjectInsta.Application.DTOs.Validations.StoryValidator;
 using ProjectInsta.Application.Services.Interfaces;
@@ -18,9 +19,9 @@ namespace ProjectInsta.Application.Services
         private readonly IUnitOfWork _unitOfWork;
 
         private readonly Account _account = new Account(
-            "dyqsqg7pk",
-            "761272487963569",
-            "7jhjINCueUwZuXhKRhrknwJG_C0"
+            CloudinaryConfig.AccountName,
+            CloudinaryConfig.ApiKey,
+            CloudinaryConfig.ApiSecret
             );
 
         public StoryService(IStoryRepository storyRepository, IMapper mapper, IUnitOfWork unitOfWork, IStoryVisualizedService storyVisualizedService, IPropertyTextService propertyTextService)
