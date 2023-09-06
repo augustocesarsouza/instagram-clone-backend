@@ -73,7 +73,7 @@ namespace ProjectInsta.Application.Services
                 return ResultService.RequestError<PostDTO>("Erro de validação verifique as informações necessarias", validator);
 
 
-            var cloudinary = new Cloudinary();
+            var cloudinary = new Cloudinary(_account);
 
             if (postDTO.Url.StartsWith("data:image"))
             //if (postDTO.IsImagem == 1) 

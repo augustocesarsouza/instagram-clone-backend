@@ -52,6 +52,15 @@ namespace ProjectInsta.Application.Services
             return ResultService.Ok(_mapper.Map<List<UserFollowersDTOs>>(userFollowings));
         }
 
+        public async Task<ResultService<HashSet<UserFollowersDTOs>>> GetSuggestionForYouProfile(int userId, int idUser)
+        {
+            var userFollowings = await _userRepostitory.GetSuggestionForYouProfile(userId, idUser);
+            if (userFollowings == null)
+                return ResultService.Fail<HashSet<UserFollowersDTOs>>("Usuario não encontrado");
+
+            return ResultService.Ok(_mapper.Map<HashSet<UserFollowersDTOs>>(userFollowings));
+        }
+
         public async Task<ResultService<UserCreateDetailDTOs>> CreateAsync(UserDTO userDTO)
         {
             if (userDTO == null)

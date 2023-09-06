@@ -2,6 +2,7 @@
 using ProjectInsta.Domain.Entities;
 using ProjectInsta.Domain.Repositories;
 using ProjectInsta.Infra.Data.Context;
+using System.Linq;
 
 namespace ProjectInsta.Infra.Data.Repositories
 {
@@ -39,17 +40,59 @@ namespace ProjectInsta.Infra.Data.Repositories
 
         public async Task<List<User>> GetFollowersUser(int userId)
         {
-            var allFollowers = _ctx
-                .Follows
-                .Where(x => x.FollowingId == userId)
-                .Select(x => x.FollowerId);
+            //var allFollowers = _ctx
+            //    .Follows
+            //    .Where(x => x.FollowingId == userId)
+            //    .Select(x => x.FollowerId);
+
+            //var user = await _ctx.Users
+            //    .Where(x => allFollowers.Contains(x.Id))
+            //    .Select(x => new User(x.Id, x.Name, x.Email, x.ImagePerfil, x.LastDisconnectedTime))
+            //    .ToListAsync();
 
             var user = await _ctx.Users
-                .Where(x => allFollowers.Contains(x.Id))
-                .Select(x => new User(x.Id, x.Name, x.Email, x.ImagePerfil, x.LastDisconnectedTime))
-                .ToListAsync();
+                .Where(u => _ctx.Follows.Any(f => f.FollowingId == userId && f.FollowerId == u.Id))
+                .ToListAsync(); 
 
             return user;
+        }
+
+        public async Task<HashSet<User>> GetSuggestionForYouProfile(int idFollowing, int idUser)
+        {
+            var userSuggestion = _ctx.Users
+                .Where(u =>
+                    u.Id != idUser &&
+                    !_ctx.Follows.Any(f => f.FollowingId == idUser && f.FollowerId == u.Id) &&
+                    _ctx.Follows.Any(f => f.FollowingId == idFollowing && f.FollowerId == u.Id)
+                ).Select(u => new User(u.Id, u.Name, u.Email, u.ImagePerfil)).ToHashSet();
+
+            //var allFollowers = _ctx
+            //    .Follows
+            //    .Where(x => x.FollowingId == idFollowing)
+            //    .Select(x => x.FollowerId).ToHashSet();
+
+            //var allFollowersIdUser = _ctx
+            //   .Follows
+            //   .Where(x => x.FollowingId == idUser)
+            //   .Select(x => x.FollowerId).ToHashSet();
+
+            //foreach (var item in allFollowersIdUser)
+            //{
+            //    allFollowers.Remove(item);
+            //}
+
+
+            //var userSuggestion = _ctx.Users
+            //    .Where(x => allFollowers.Contains(x.Id))
+            //    .Select(x => new User(x.Id, x.Name, x.Email, x.ImagePerfil))
+            //    .ToHashSet();
+
+            //var userProfile = userSuggestion.First(x => x.Id == idUser);
+            //userSuggestion.Remove(userProfile);
+
+
+
+            return userSuggestion;
         }
 
         public async Task<List<User?>> GetUsersFollowignByIdAsync(int idUser)
