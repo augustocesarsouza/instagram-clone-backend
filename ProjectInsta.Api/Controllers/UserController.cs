@@ -36,10 +36,10 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("v1/get/suggestion/followers/{idFollowing}/{idUser}")]
-        public async Task<IActionResult> GetSuggestionFollowers([FromRoute] int idFollowing, [FromRoute] int idUser)
+        [HttpGet("v1/get/suggestion/followers/{idFollowing}/{idUser}/{isProfile}")]
+        public async Task<IActionResult> GetSuggestionFollowers([FromRoute] int idFollowing, [FromRoute] int idUser, bool isProfile)
         {
-            var result = await _userService.GetSuggestionForYouProfile(idFollowing, idUser);
+            var result = await _userService.GetSuggestionForYouProfile(idFollowing, idUser, isProfile);
             if (result.IsSucess) 
                 return Ok(result);
 

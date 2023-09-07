@@ -57,14 +57,31 @@ namespace ProjectInsta.Infra.Data.Repositories
             return user;
         }
 
-        public async Task<HashSet<User>> GetSuggestionForYouProfile(int idFollowing, int idUser)
+        public async Task<HashSet<User>> GetSuggestionForYouProfile(int idFollowing, int idUser, bool isProfile)
         {
-            var userSuggestion = _ctx.Users
+            if (isProfile)
+            {
+                var userSuggestion = _ctx.Users
                 .Where(u =>
                     u.Id != idUser &&
                     !_ctx.Follows.Any(f => f.FollowingId == idUser && f.FollowerId == u.Id) &&
                     _ctx.Follows.Any(f => f.FollowingId == idFollowing && f.FollowerId == u.Id)
                 ).Select(u => new User(u.Id, u.Name, u.Email, u.ImagePerfil)).ToHashSet();
+
+                return userSuggestion;
+            }
+            else
+            {
+                var userSuggestion = _ctx.Users
+                .Where(u =>
+                    !_ctx.Follows.Any(f => f.FollowingId == idUser && f.FollowerId == u.Id) &&
+                    _ctx.Follows.Any(f => f.FollowingId == idFollowing && f.FollowerId == u.Id)
+                ).Select(u => new User(u.Id, u.Name, u.Email, u.ImagePerfil)).ToHashSet();
+
+                return userSuggestion;
+            }
+
+            
 
             //var allFollowers = _ctx
             //    .Follows
@@ -92,7 +109,7 @@ namespace ProjectInsta.Infra.Data.Repositories
 
 
 
-            return userSuggestion;
+            
         }
 
         public async Task<List<User?>> GetUsersFollowignByIdAsync(int idUser)

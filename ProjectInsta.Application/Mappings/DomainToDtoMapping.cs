@@ -235,16 +235,12 @@ namespace ProjectInsta.Application.Mappings
                 });
 
             CreateMap<Follow, FollowDTO>()
-                .ForMember(x => x.Followings, opt => opt.Ignore())
-                .ForPath(x => x.Followings, opt => opt.Ignore())
                 .ConstructUsing((model, context) =>
                 {
                     var dto = new FollowDTO
                     {
                         Id = model.Id,
                         FollowerId = model.FollowerId,
-                        Followers = null,
-                        Followings = null,
                         //Followings = model.Following.Following.Select(x => new UserDTO
                         //{
                         //    Id = x.Follower.Id,
