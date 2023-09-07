@@ -65,6 +65,7 @@ namespace ProjectInsta.Infra.Data.Repositories
                 .Where(u =>
                     u.Id != idUser &&
                     !_ctx.Follows.Any(f => f.FollowingId == idUser && f.FollowerId == u.Id) &&
+                    !_ctx.Follows.Any(f => f.FollowingId == u.Id && f.FollowerId == idUser) &&
                     _ctx.Follows.Any(f => f.FollowingId == idFollowing && f.FollowerId == u.Id)
                 ).Select(u => new User(u.Id, u.Name, u.Email, u.ImagePerfil)).ToHashSet();
 
