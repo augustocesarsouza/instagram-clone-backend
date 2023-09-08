@@ -40,7 +40,7 @@ namespace ProjectInsta.Api.Controllers
         public async Task<IActionResult> GetSuggestionFollowers([FromRoute] int idFollowing, [FromRoute] int idUser, bool isProfile)
         {
             var result = await _userService.GetSuggestionForYouProfile(idFollowing, idUser, isProfile);
-            if (result.IsSucess) 
+            if (result.IsSucess)
                 return Ok(result);
 
             return BadRequest(result);
@@ -113,6 +113,16 @@ namespace ProjectInsta.Api.Controllers
         {
             var result = await _userService.UpdateAsync(userDTO);
             if (result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
+        [HttpPut("v1/update/perfilimg/{email}")]
+        public async Task<IActionResult> UpdateImgUserPerfil([FromRoute] string email, [FromBody] ImagemBase64ProfileUserDTO imagemBase64ProfileUserDTO)
+        {
+            var result = await _userService.UpdateImgPerfilUser(email, imagemBase64ProfileUserDTO);
+            if(result.IsSucess)
                 return Ok(result);
 
             return BadRequest(result);

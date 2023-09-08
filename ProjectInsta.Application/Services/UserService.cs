@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using ProjectInsta.Application.CloudinaryAAA;
 using ProjectInsta.Application.DTOs;
 using ProjectInsta.Application.DTOs.UserDTOsReturn;
+using ProjectInsta.Application.DTOs.Validations.ImagemBase64ProfileUserValidator;
 using ProjectInsta.Application.DTOs.Validations.UserValidator;
 using ProjectInsta.Application.Services.Interfaces;
 using ProjectInsta.Domain.Authentication;
@@ -19,9 +21,9 @@ namespace ProjectInsta.Application.Services
         private readonly ITokenGenerator _tokenGenerator;
         private readonly IMapper _mapper;
         private readonly Account _account = new Account(
-            "dyqsqg7pk",
-            "761272487963569",
-            "7jhjINCueUwZuXhKRhrknwJG_C0"
+            CloudinaryConfig.AccountName,
+            CloudinaryConfig.ApiKey,
+            CloudinaryConfig.ApiSecret
             );
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserPermissionService _userPermissionService;
@@ -148,12 +150,60 @@ namespace ProjectInsta.Application.Services
                 await _unitOfWork.Commit();
                 return ResultService.Ok(_mapper.Map<UserDTO>(userUpdate));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _unitOfWork.Rollback();
                 return ResultService.Fail<UserDTO>($"{ex.Message}");
             }
 
+        }
+
+        public async Task<ResultService<UserDTO>> UpdateImgPerfilUser(string email, ImagemBase64ProfileUserDTO imagemBase64ProfileUserDTO)
+        {
+            var userCheck = await _userRepostitory.GetByEmailCheckUser(email);
+            if (userCheck == null)
+                return ResultService.Fail<UserDTO>("User não existe");
+
+            var validatorBase64 = new ImagemBase64ProfileUserDTOValidator().Validate(imagemBase64ProfileUserDTO);
+            if (!validatorBase64.IsValid)
+                return ResultService.RequestError<UserDTO>("Erro em validar seu DTO", validatorBase64);
+
+            if (!imagemBase64ProfileUserDTO.Base64.StartsWith("data:image"))
+                return ResultService.Fail<UserDTO>("Erro não é uma Imagem");
+
+            var publicIdFromClodunaryServer = userCheck.PublicId;
+
+            var cloudinary = new Cloudinary(_account);
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(imagemBase64ProfileUserDTO.Base64),
+            };
+
+            var uploadResult = await cloudinary.UploadAsync(uploadParams);
+            var publicId = uploadResult.PublicId;
+            var imgUrl = cloudinary.Api.UrlImgUp.BuildUrl(publicId);
+
+            var validatorCheck = userCheck.ValidatorCloudinary(publicId, imgUrl);
+            if (!validatorCheck)
+                return ResultService.Fail<UserDTO>("Erro ao criar publicId ou ImgUrl");
+
+            await cloudinary.DestroyAsync(new DeletionParams(publicIdFromClodunaryServer) { ResourceType = ResourceType.Image });
+
+            try
+            {
+                await _unitOfWork.BeginTransaction();
+                var data = await _userRepostitory.UpdateAsync(userCheck);
+                await _unitOfWork.Commit();
+                return ResultService.Ok(_mapper.Map<UserDTO>(data));
+
+            }
+            catch (Exception ex)
+            {
+                await cloudinary.DestroyAsync(new DeletionParams(publicId) { ResourceType = ResourceType.Image });
+                await _unitOfWork.Rollback();
+                return ResultService.Fail<UserDTO>($"{ex.Message}");
+            }
         }
 
         public async Task<ResultService<UserLoginDTO>> Login(string email, string password)

@@ -13,6 +13,7 @@ namespace ProjectInsta.Application.Services.Interfaces
         public Task<ResultService<HashSet<UserFollowersDTOs>>> GetSuggestionForYouProfile(int userId, int idUser, bool isProfile);
         public Task<ResultService<UserCreateDetailDTOs>> CreateAsync(UserDTO userDTO);
         public Task<ResultService<UserDTO>> UpdateAsync(UserDTO userDTO);
+        public Task<ResultService<UserDTO>> UpdateImgPerfilUser(string email, ImagemBase64ProfileUserDTO imagemBase64ProfileUserDTO);
         public Task<ResultService<UserLoginDTO>> Login(string email, string password);
         public Task<ResultService<UserDTO>> UpdateLastDisconnectedTimeUser(string email);
 

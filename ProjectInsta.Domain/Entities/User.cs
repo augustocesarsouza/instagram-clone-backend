@@ -104,6 +104,25 @@ namespace ProjectInsta.Domain.Entities
             Token = token;
         }
 
+        public bool ValidatorCloudinary(string publicId, string imgUrl)
+        {
+            //DomainValidationException.When(string.IsNullOrEmpty(publicId), "Deve ser informado um publicId para o usuario");
+            //DomainValidationException.When(string.IsNullOrEmpty(imgUrl), "Deve ser informado uma imgUrl para o usuario");
+            if (string.IsNullOrEmpty(publicId))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(imgUrl))
+            {
+                return false;
+            }
+
+            PublicId = publicId;
+            ImagePerfil = imgUrl;
+            return true;
+        }
+
         public void ValidateLastDisconnectedTime(DateTime dateTime)
         {
             LastDisconnectedTime = dateTime;

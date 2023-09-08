@@ -38,6 +38,13 @@ namespace ProjectInsta.Infra.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<User?> GetByEmailCheckUser(string email)
+        {
+            return await _ctx.Users
+                .Where(x => x.Email == email)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<List<User>> GetFollowersUser(int userId)
         {
             //var allFollowers = _ctx
@@ -52,7 +59,7 @@ namespace ProjectInsta.Infra.Data.Repositories
 
             var user = await _ctx.Users
                 .Where(u => _ctx.Follows.Any(f => f.FollowingId == userId && f.FollowerId == u.Id))
-                .ToListAsync(); 
+                .ToListAsync();
 
             return user;
         }
@@ -82,7 +89,7 @@ namespace ProjectInsta.Infra.Data.Repositories
                 return userSuggestion;
             }
 
-            
+
 
             //var allFollowers = _ctx
             //    .Follows
@@ -110,7 +117,7 @@ namespace ProjectInsta.Infra.Data.Repositories
 
 
 
-            
+
         }
 
         public async Task<List<User?>> GetUsersFollowignByIdAsync(int idUser)
