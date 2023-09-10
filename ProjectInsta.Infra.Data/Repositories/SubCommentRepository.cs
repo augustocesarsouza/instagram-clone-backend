@@ -19,13 +19,6 @@ namespace ProjectInsta.Infra.Data.Repositories
             return await _ctx.SubComments.Include(x => x.User).ToListAsync();
         }
 
-        public async Task<SubComment> GetByIdAsync(int id)
-        {
-            return await _ctx.SubComments
-                .Include(x => x.User)
-                .FirstOrDefaultAsync(x => x.Id == id);
-        }
-
         public async Task<SubComment> GetByIdCreateAsync(int id)
         {
              var subs = await _ctx.SubComments

@@ -21,18 +21,6 @@ namespace ProjectInsta.Application.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ResultService<SubCommentDTO>> GetByIdAsync(int id)
-        {
-            var subComment = await _repository.GetByIdAsync(id);
-            return ResultService.Ok(_mapper.Map<SubCommentDTO>(subComment));
-        }
-
-        public async Task<ResultService<ICollection<SubCommentDTO>>> GetAllAsync()
-        {
-            var subsComments = await _repository.GetAllAsync();
-            return ResultService.Ok(_mapper.Map<ICollection<SubCommentDTO>>(subsComments));
-        }
-
         public async Task<ResultService<ICollection<SubCommentDTO>>> GetByCommentIdAsync(int commentId, int pagina, int registroPorPagina)
         {
             var subsComments = await _repository.GetByCommentIdAsync(commentId, pagina, registroPorPagina);
@@ -71,28 +59,6 @@ namespace ProjectInsta.Application.Services
             }
         }
 
-        //public async Task<ResultService<SubCommentDTO>> DeleteAsync(int commentId)
-        //{
-        //    var subComment = await _repository.GetByCommentId( commentId);
-        //    if (subComment == null)
-        //        return ResultService.Fail<SubCommentDTO>("Não encontramos o objeto");
-
-        //    try
-        //    {
-        //        await _unitOfWork.BeginTransaction();
-
-        //        var data = await _repository.DeleteAsync(subComment);
-
-        //        await _unitOfWork.Commit();
-        //        return ResultService.Ok(_mapper.Map<SubCommentDTO>(data));
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        await _unitOfWork.Rollback();
-        //        return ResultService.Fail<SubCommentDTO>($"{ex.Message}");
-        //    }
-        //}
 
         public async Task DeleteAsync(int commentId)
         {

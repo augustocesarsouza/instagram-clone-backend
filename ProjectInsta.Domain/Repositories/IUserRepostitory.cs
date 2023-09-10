@@ -12,7 +12,6 @@ namespace ProjectInsta.Domain.Repositories
         public Task<List<User?>> GetUsersFollowignByIdAsync(int idUser);
         public Task<User?> GetByEmail(string email);
         public Task<User?> GetByEmailSignalR(string email);
-        public Task<User?> GetByEmailDisconnected(string email);
         public Task<User> CreateAsync(User user);
         public Task<User> UpdateAsync(User user);
     }

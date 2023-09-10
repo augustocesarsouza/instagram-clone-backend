@@ -14,27 +14,8 @@ namespace ProjectInsta.Api.Controllers
             _followService = followService;
         }
 
-        [HttpGet("v1/follows/{followerId}/{followingId}")]
-        public async Task<ActionResult> GetByFollowerAndFollowingAsync([FromRoute] int followerId, [FromRoute] int followingId)
-        {
-            var resut = await _followService.GetByFollowerAndFollowingAsync(followerId, followingId);
-            if(resut.IsSucess)
-                return Ok(resut);
-
-            return BadRequest(resut);
-        }
-
-        [HttpGet("v1/follows/{userId}")]
-        public async Task<ActionResult> GetByIdAllFollowing([FromRoute] int userId)
-        {
-            var resut = await _followService.GetByIdAllFollowing(userId);
-            if (resut.IsSucess)
-                return Ok(resut);
-
-            return BadRequest(resut);
-        }
-
-        [HttpGet("v1/followallfollowersfromuser/{userId}")]
+        //[HttpGet("v1/followallfollowersfromuser/{userId}")]
+        [HttpGet("v1/follow/user/follower/all/{userId}")]
         public async Task<ActionResult> GetAllFollowersFromUser([FromRoute] int userId)
         {
             var resut = await _followService.GetAllFollowersFromUser(userId);
@@ -44,7 +25,8 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(resut);
         }
 
-        [HttpGet("v1/followallfollowingfromuser/{userId}")]
+        //[HttpGet("v1/followallfollowingfromuser/{userId}")]
+        [HttpGet("v1/follow/user/following/all/{userId}")]
         public async Task<ActionResult> GetAllFollowingFromUser([FromRoute] int userId)
         {
             var resut = await _followService.GetAllFollowingFromUser(userId);

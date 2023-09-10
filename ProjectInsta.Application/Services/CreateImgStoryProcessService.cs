@@ -28,8 +28,7 @@ namespace ProjectInsta.Application.Services
                 var uploadParams = new ImageUploadParams()
                 {
                     File = new FileDescription(processImgDTO.Url),
-                    Transformation = new Transformation().Width(480).Height(750).Crop("fill").Quality(70),
-                    
+                    Transformation = new Transformation().Width(542).Height(871).Crop("fill").Quality(100),
                 };
 
                 var uploadResult = await cloudinary.UploadAsync(uploadParams);

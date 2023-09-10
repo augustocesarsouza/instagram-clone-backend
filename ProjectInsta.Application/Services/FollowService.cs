@@ -20,24 +20,6 @@ namespace ProjectInsta.Application.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ResultService<FollowDTO>> GetByFollowerAndFollowingAsync(int followerId, int followingId)
-        {
-            var follow = await _repository.GetByFollowerAndFollowingAsync(followerId, followingId);
-            if (follow == null)
-                return ResultService.Fail<FollowDTO>("Erro nao encontramos follow");
-
-            return ResultService.Ok(_mapper.Map<FollowDTO>(follow));
-        }
-
-        public async Task<ResultService<FollowDTO>> GetByIdAllFollowing(int userId)
-        {
-            var follows = await _repository.GetByIdAllFollowing(userId);
-            if (follows == null)
-                return ResultService.Fail<FollowDTO>("Erro nao encontramos nenhuma pessoa que ele segue");
-
-            return ResultService.Ok(_mapper.Map<FollowDTO>(follows));
-        }
-
         public async Task<ResultService<ICollection<FollowDTO>>> GetAllFollowersFromUser(int userId)
         {
             var allFollowing = await _repository.GetAllFollowersFromUser(userId);

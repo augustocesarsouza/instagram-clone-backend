@@ -14,17 +14,7 @@ namespace ProjectInsta.Api.Controllers
             _commentService = commentService;
         }
 
-        [HttpGet("v1/comments")]
-        public async Task<IActionResult> GetAllAsync()
-        {
-            var comments = await _commentService.GetAllCommentsAsync();
-            if(comments.IsSucess)
-                return Ok(comments);
-
-            return BadRequest(comments);
-        }
-
-        [HttpGet("v1/comments/{postId}")]
+        [HttpGet("v1/comment/user/{postId}")]
         public async Task<IActionResult> GetByPostIdAsync(
             [FromRoute] int postId)
         {
@@ -35,7 +25,7 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(comments);
         }
 
-        [HttpGet("v1/commentslikeinfo/{postId}")]
+        [HttpGet("v1/comment/info/{postId}")]
         public async Task<IActionResult> GetLikeCommentsInfo(
             [FromRoute] int postId)
         {
@@ -46,7 +36,7 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(comments);
         }
 
-        [HttpGet("v1/commentsforreels/{postId}")]
+        [HttpGet("v1/comment/reels/{postId}")]
         public async Task<IActionResult> GetByPostIdForReelsAsync(
             [FromRoute] int postId)
         {
@@ -68,7 +58,7 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(comment);
         }
 
-        [HttpDelete("v1/comment/{commentId}")]
+        [HttpDelete("v1/comment/delete/{commentId}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] int commentId)
         {
             var comment = await _commentService.DeleteByCommentIdAsync(commentId);

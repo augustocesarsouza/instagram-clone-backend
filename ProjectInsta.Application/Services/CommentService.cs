@@ -25,12 +25,6 @@ namespace ProjectInsta.Application.Services
             _likeCommentService = likeCommentService;
         }
 
-        public async Task<ResultService<ICollection<CommentDTO>>> GetAllCommentsAsync()
-        {
-            var comments = await _commentRepository.GetAllCommentsAsync();
-            return ResultService.Ok(_mapper.Map<ICollection<CommentDTO>>(comments));
-        }
-
         public async Task<ResultService<ICollection<CommentDTO>>> GetCommentsByPostIdAsync(int postId)
         {
             var comment = await _commentRepository.GetByPostIdAsync(postId);
@@ -72,33 +66,6 @@ namespace ProjectInsta.Application.Services
 
             var data = await _commentRepository.CreateCommentAsync(_mapper.Map<Comment>(commentDTO));
             return ResultService.Ok(_mapper.Map<CommentDTO>(data));
-        }
-
-        public async Task<ResultService<CommentDTO>> DeleteAsync(int? userId, int? postId)
-        {
-            var comment = await _commentRepository.GetByUserIdAndPostId(userId, postId); // tentar diminuir aqui o get do SubCOmment para pegar só UserId e CommentId
-            if (comment == null)
-                return ResultService.Fail<CommentDTO>("Não encontramos o objeto");
-
-            await _subCommentService.DeleteAsync(comment.Id);
-
-            await _likeCommentService.RemoveAsyncNoReturn(comment.Id);
-
-            try
-            {
-                await _unitOfWork.BeginTransaction();
-
-                var data = await _commentRepository.DeleteAsync(comment);
-
-                await _unitOfWork.Commit();
-                return ResultService.Ok(_mapper.Map<CommentDTO>(data));
-
-            }
-            catch (Exception ex)
-            {
-                await _unitOfWork.Rollback();
-                return ResultService.Fail<CommentDTO>($"{ex.Message}");
-            }
         }
 
         public async Task<ResultService<CommentDTO>> DeleteByCommentIdAsync(int commentId)

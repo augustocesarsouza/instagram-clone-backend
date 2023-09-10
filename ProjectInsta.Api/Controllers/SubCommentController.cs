@@ -16,27 +16,7 @@ namespace ProjectInsta.Api.Controllers
             _subCommentService = subCommentService;
         }
 
-        [HttpGet("v1/subComment/{id}")]
-        public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
-        {
-            var subComment = await _subCommentService.GetByIdAsync(id);
-            if (subComment.IsSucess)
-                return Ok(subComment);
-
-            return BadRequest(subComment);
-        }
-
-        [HttpGet("v1/subComments")]
-        public async Task<IActionResult> GetAllAsync()
-        {
-            var subComments = await _subCommentService.GetAllAsync();
-            if (subComments.IsSucess)
-                return Ok(subComments);
-
-            return BadRequest(subComments);
-        }
-
-        [HttpGet("v1/subComments/{commentId}/{pagina}/{registroPorPagina}")]
+        [HttpGet("v1/subcomment/pagination/{commentId}/{pagina}/{registroPorPagina}")]
         public async Task<IActionResult> GetCommentIdAsync([FromRoute] int commentId, [FromRoute] int pagina, [FromRoute] int registroPorPagina)
         {
             var subComments = await _subCommentService.GetByCommentIdAsync(commentId, pagina, registroPorPagina);
@@ -46,7 +26,7 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(subComments);
         }
 
-        [HttpPost("v1/subComment")]
+        [HttpPost("v1/subcomment")]
         public async Task<IActionResult> CreateAsync([FromBody] SubCommentDTO subCommentDTO)
         {
             try

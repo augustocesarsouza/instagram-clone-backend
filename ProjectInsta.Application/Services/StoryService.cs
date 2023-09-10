@@ -33,13 +33,6 @@ namespace ProjectInsta.Application.Services
             _propertyTextService = propertyTextService;
         }
 
-        public async Task<ResultService<ICollection<StoryDTO>>> GetAllStory()
-        {
-            var storys = await _storyRepository.GetAllStory();
-
-            return ResultService.Ok(_mapper.Map<ICollection<StoryDTO>>(storys));
-        }
-
         public async Task<ResultService<List<StoryDTO>>> GetByUserIdAsync(int userCreatePost)
         {
             var storys = await _storyRepository.GetByUserIdAsync(userCreatePost);
@@ -59,21 +52,6 @@ namespace ProjectInsta.Application.Services
             }
 
             return ResultService.Ok(_mapper.Map<List<StoryDTO>>(storys));
-        }
-
-        public async Task<ResultService<StoryDTO>> UpdateUserVisualizedStory(int storyId, int idUserView)
-        {
-            if (storyId <= 0 || idUserView <= 0)
-                return ResultService.Fail<StoryDTO>("verifique os id passados nao pode ser menor que 1");
-
-            var story = await _storyRepository.GetIdStoryToUpdate(storyId);
-
-            if (story == null)
-                return ResultService.Fail<StoryDTO>("Não foi possivel encontrar esse story");
-
-            //story.AddViewStoryList(idUserView);
-
-            return ResultService.Ok(_mapper.Map<StoryDTO>(story));
         }
 
         public async Task<ResultService<StoryDTO>> CreateAsync(StoryDTO story)

@@ -20,15 +20,6 @@ namespace ProjectInsta.Application.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ResultService<ICollection<MessageDTO>>> GetAllMessageSenderUserForRecipientUserAsync(int senderUserId, int recipientUserId)
-        {
-            var message = await _messageRepository.GetAllMessageSenderUserForRecipientUserAsync(senderUserId, recipientUserId);
-            if (message.Count <= 0)
-                return ResultService.Fail<ICollection<MessageDTO>>("Não tem mensagens entre eses usuarios");
-
-            return ResultService.Ok(_mapper.Map<ICollection<MessageDTO>>(message));
-        }
-
         public async Task<ResultService<ICollection<MessageDTO>>> GetAllMessageSenderUserForRecipientUserAsyncPagaginada(int senderUserId, int recipientUserId, int pagina, int registroPorPagina)
         {
             var message = await _messageRepository.GetAllMessageSenderUserForRecipientUserAsyncPagaginada(senderUserId, recipientUserId, pagina, registroPorPagina);

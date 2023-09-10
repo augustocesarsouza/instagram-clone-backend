@@ -112,19 +112,6 @@ namespace ProjectInsta.Infra.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Post> GetPostIdOnlyCount(int postId)
-        {
-            var post = await _ctx
-                .Posts
-                .Where(x => x.Id == postId) 
-                .Select(x => new Post(x.Id, x.Title, x.Url, x.PublicId, x.IsImagem, x.CounterOfLikes, x.AuthorId))
-                .FirstOrDefaultAsync();
-            //public Post(int id, string title, string url, string? publicId, int isImagem, int? counterOfLikes, int? authorId)
-            return post;
-        }
-
-        //////////
-
         public async Task<Post> CreatePostAsync(Post post)
         {
             await _ctx.Posts.AddAsync(post);

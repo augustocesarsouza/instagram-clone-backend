@@ -4,7 +4,6 @@ namespace ProjectInsta.Domain.Repositories
 {
     public interface ISubCommentRepository
     {
-        public Task<SubComment> GetByIdAsync(int id);
         public Task<SubComment> GetByIdCreateAsync(int id);
         public Task<ICollection<SubComment>> GetAllAsync();
         public Task<ICollection<SubComment>> GetByCommentIdAsync(int commentId, int pagina, int registroPorPagina);

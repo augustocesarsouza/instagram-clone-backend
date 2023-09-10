@@ -14,34 +14,12 @@ namespace ProjectInsta.Infra.Data.Repositories
             _ctx = ctx;
         }
 
-        public async Task<ICollection<Story>> GetAllStory()
-        {
-            var story = await _ctx
-                .Stories
-                .AsNoTracking() // atualizar, inserir ou excluir entidades
-                .Select(x => new Story(x.Id, x.Url))
-                .ToListAsync();
-
-            return story;
-        }
-
         public async Task<Story> GetByIdAsync(int id)
         {
             var story = await _ctx
                 .Stories
                 .Where(x => x.Id == id)
                 .Select(x => new Story(x.Id, x.Url, x.PublicId, x.IsImagem))
-                .FirstOrDefaultAsync();
-
-            return story;
-        }
-
-        public async Task<Story> GetIdStoryToUpdate(int idStory)
-        {
-            var story = await _ctx
-                .Stories
-                .Where(x => x.Id == idStory)
-                .Select(x => new Story(x.Id, x.Url))
                 .FirstOrDefaultAsync();
 
             return story;

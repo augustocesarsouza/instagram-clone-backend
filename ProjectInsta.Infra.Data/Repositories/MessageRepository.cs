@@ -14,18 +14,6 @@ namespace ProjectInsta.Infra.Data.Repositories
             _context = context;
         }
 
-        public async Task<ICollection<Message>> GetAllMessageSenderUserForRecipientUserAsync(int senderUserId, int recipientUserId)
-        {
-            var messages = await _context
-                .Messages
-                .Where(x => x.SenderId == senderUserId && x.RecipientId == recipientUserId)
-                .Concat(_context.Messages.Where(x => x.SenderId == recipientUserId && x.RecipientId == senderUserId))
-                .OrderByDescending(x => x.Timestamp)
-                .ToListAsync();
-
-            return messages;
-        }
-
         public async Task<ICollection<Message>> GetAllMessageSenderUserForRecipientUserAsyncPagaginada(int senderUserId, int recipientUserId, int pagina, int registroPorPagina)
         {
             var messages = await _context

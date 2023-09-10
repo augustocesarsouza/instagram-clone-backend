@@ -80,7 +80,7 @@ namespace ProjectInsta.Application.MyHubs
 
         public async Task OnDisconnectedAsync(string myEmail, string[] emailUsers)
         {
-            var user = await _userService.UpdateLastDisconnectedTimeUser(myEmail);
+            var user = await _userService.UpdateLastDisconnectedTimeUserForMessageHub(myEmail);
 
             foreach (var email in emailUsers)
             {

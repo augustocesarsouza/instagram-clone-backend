@@ -14,36 +14,6 @@ namespace ProjectInsta.Infra.Data.Repositories
             _context = context;
         }
 
-        public async Task<Follow> GetByIdAllFollowing(int userId)
-        {
-            var follow = await _context
-                .Follows
-                .Where(x => x.FollowerId == userId)
-                .Include(x => x.Following)
-                .ThenInclude(x => x.Following)
-                .Select(x =>
-                new Follow(x.Id, x.FollowerId, x.FollowingId,
-                new User(x.Following.Id, x.Following.Name, x.Following.ImagePerfil)))
-                .FirstOrDefaultAsync();
-                
-
-             //.Select(x => new Follow
-             // {
-             //     Id = x.Id,
-             //     FollowerId = x.FollowingId,
-             //     FollowingId = x.FollowingId,
-             //     Following = new User
-             //     {
-             //         Id = x.Following.Id,
-             //         Name = x.Following.Name,
-             //         ImagePerfil = x.Following.ImagePerfil,
-
-             //     }
-             // })
-
-            return follow;
-        }
-
         public async Task<ICollection<Follow>> GetAllFollowersFromUser(int userId)
         {
             //Get só para pegar para Min tela que abre para inspecionar o usuario

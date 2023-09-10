@@ -14,17 +14,7 @@ namespace ProjectInsta.Api.Controllers
             _messageService = messageService;
         }
 
-        [HttpGet("v1/messages/{senderUserId}/{recipientUserId}")]
-        public async Task<IActionResult> GetAllMessageSenderUserForRecipientUserAsync([FromRoute] int senderUserId, [FromRoute] int recipientUserId)
-        {
-            var result = await _messageService.GetAllMessageSenderUserForRecipientUserAsync(senderUserId, recipientUserId);
-            if (result.IsSucess)
-                return Ok(result);
-
-            return BadRequest(result);
-        }
-
-        [HttpGet("v1/messages/{senderUserId}/{recipientUserId}/{pagina}/{registroPorPagina}")]
+        [HttpGet("v1/message/pagination/{senderUserId}/{recipientUserId}/{pagina}/{registroPorPagina}")]
         public async Task<IActionResult> GetAllMessageSenderUserForRecipientUserAsyncPagaginada
             ([FromRoute] int senderUserId, [FromRoute] int recipientUserId, [FromRoute] int pagina, [FromRoute] int registroPorPagina)
         {

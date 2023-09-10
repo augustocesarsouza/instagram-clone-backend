@@ -14,7 +14,7 @@ namespace ProjectInsta.Api.Controllers
             _postService = postService;
         }
 
-        [HttpGet("v1/posts")]
+        [HttpGet("v1/post/all")]
         public async Task<IActionResult> GetAllPostsAsync()
         {
             var result = await _postService.GetAllPostsAsync();
@@ -24,7 +24,7 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("v1/postAuthorId/{authorId}")]
+        [HttpGet("v1/post/author/{authorId}")]
         public async Task<IActionResult> GetByAuthorId([FromRoute] int authorId)
         {
             var result = await _postService.GetPostByAuthorId(authorId);
@@ -34,7 +34,7 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("v1/threePosts/{userId}")]
+        [HttpGet("v1/post/three/{userId}")]
         public async Task<IActionResult> GetThereePostAsync([FromRoute] int userId)
         {
             var result = await _postService.GetThreeLastPostAsync(userId);
@@ -44,31 +44,11 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("v1/videosreels")]
+        [HttpGet("v1/post/videos/reels")]
         public async Task<IActionResult> GetVideosReels()
         {
             var result = await _postService.GetVideosForReels();
             if(result.IsSucess)
-                return Ok(result);
-
-            return BadRequest(result);
-        }
-
-        [HttpGet("v1/countpostlike/{postId}")]
-        public async Task<IActionResult> CountPostLike([FromRoute] int postId)
-        {
-            var result = await _postService.CountPostLike(postId);
-            if (result.IsSucess)
-                return Ok(result);
-
-            return BadRequest(result);
-        }
-
-        [HttpGet("v1/removelikecount/{postId}")]
-        public async Task<IActionResult> RemoveLikeCount([FromRoute] int postId)
-        {
-            var result = await _postService.RemoveLikeCount(postId);
-            if (result.IsSucess)
                 return Ok(result);
 
             return BadRequest(result);

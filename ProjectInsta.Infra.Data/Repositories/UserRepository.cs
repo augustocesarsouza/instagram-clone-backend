@@ -172,16 +172,6 @@ namespace ProjectInsta.Infra.Data.Repositories
             return userPer;
         }
 
-        public async Task<User?> GetByEmailDisconnected(string email)
-        {
-            return await _ctx.Users
-                .Include(x => x.UserPermissions)
-                .ThenInclude(x => x.Permission)
-                .Where(x => x.Email == email)
-                .Select(x => new User(x.Id, x.Name, x.Email, x.LastDisconnectedTime))
-                .FirstOrDefaultAsync();
-        }
-
         public async Task<User> CreateAsync(User user)
         {
             await _ctx.Users.AddAsync(user);

@@ -14,31 +14,11 @@ namespace ProjectInsta.Api.Controllers
             _storyService = storyService;
         }
 
-        [HttpGet("v1/storyall")]
-        public async Task<IActionResult> GetAllAsync()
-        {
-            var result = await _storyService.GetAllStory();
-            if(result.IsSucess)
-                return Ok(result);
-
-            return BadRequest(result);
-        }
-
-        [HttpGet("v1/storyallbyuserCreatePost/{userCreatePost}")]
+        [HttpGet("v1/story/user/all/{idCreator}")]
         public async Task<IActionResult> GetByIdAsync([FromRoute] int userCreatePost)
         {
             var result = await _storyService.GetByUserIdAsync(userCreatePost);
             if(result.IsSucess)
-                return Ok(result);
-
-            return BadRequest(result);
-        }
-
-        [HttpGet("v1/storyupdateuservisualizedstory/{storyId}/{idUserView}")]
-        public async Task<IActionResult> UpdateUserVisualizedStory([FromRoute] int storyId, [FromRoute] int idUserView)
-        {
-            var result = await _storyService.UpdateUserVisualizedStory(storyId, idUserView);
-            if (result.IsSucess)
                 return Ok(result);
 
             return BadRequest(result);

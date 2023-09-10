@@ -63,6 +63,15 @@ namespace ProjectInsta.Application.Services
             return ResultService.Ok(_mapper.Map<HashSet<UserFollowersDTOs>>(userFollowings));
         }
 
+        public async Task<ResultService<List<UserFollowingDTOs>>> GetUsersFollowignByIdAsync(int idUser)
+        {
+            var user = await _userRepostitory.GetUsersFollowignByIdAsync(idUser);
+            if (user == null)
+                return ResultService.Fail<List<UserFollowingDTOs>>("Usuario não Localizado");
+
+            return ResultService.Ok(_mapper.Map<List<UserFollowingDTOs>>(user));
+        }
+
         public async Task<ResultService<UserCreateDetailDTOs>> CreateAsync(UserDTO userDTO)
         {
             if (userDTO == null)
@@ -234,7 +243,7 @@ namespace ProjectInsta.Application.Services
             }
         }
 
-        public async Task<ResultService<UserDTO>> UpdateLastDisconnectedTimeUser(string email)
+        public async Task<ResultService<UserDTO>> UpdateLastDisconnectedTimeUserForMessageHub(string email)
         {
             if (string.IsNullOrEmpty(email))
                 return ResultService.Fail<UserDTO>("erro email não enviado");
@@ -250,23 +259,5 @@ namespace ProjectInsta.Application.Services
             var userDto = _mapper.Map<UserDTO>(user);
 
             return ResultService.Ok(userDto);
-        }
-
-        public async Task<ResultService<UserDTO>> GetByEmailDisconnected(string email)
-        {
-            var user = await _userRepostitory.GetByEmailDisconnected(email);
-            if (user == null)
-                return ResultService.Fail<UserDTO>("Usuario não Localizado");
-            return ResultService.Ok(_mapper.Map<UserDTO>(user));
-        }
-
-        public async Task<ResultService<List<UserFollowingDTOs>>> GetUsersFollowignByIdAsync(int idUser)
-        {
-            var user = await _userRepostitory.GetUsersFollowignByIdAsync(idUser);
-            if (user == null)
-                return ResultService.Fail<List<UserFollowingDTOs>>("Usuario não Localizado");
-
-            return ResultService.Ok(_mapper.Map<List<UserFollowingDTOs>>(user));
-        }
-    }
+        }    }
 }

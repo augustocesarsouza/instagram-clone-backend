@@ -14,11 +14,6 @@ namespace ProjectInsta.Infra.Data.Repositories
             _ctx = ctx;
         }
 
-        public async Task<ICollection<Comment>> GetAllCommentsAsync()
-        {
-            return await _ctx.Comments.Include(x => x.User).ToListAsync();
-        }
-
         public async Task<ICollection<Comment>> GetByPostIdAsync(int postId)
         {
             var comments = await _ctx.Comments

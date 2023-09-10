@@ -16,7 +16,7 @@ namespace ProjectInsta.Api.Controllers
             _userService = userService;
         }
 
-        [HttpGet("v1/userDataOnly/{idUser}")]
+        [HttpGet("v1/user/data/{idUser}")]
         public async Task<IActionResult> GetUserDataOnly([FromRoute] int idUser)
         {
             var result = await _userService.GetUserDataOnly(idUser);
@@ -26,7 +26,7 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("v1/followersfromuser/{idUser}")]
+        [HttpGet("v1/user/followers/{idUser}")]
         public async Task<IActionResult> GetFollowersUser([FromRoute] int idUser)
         {
             var result = await _userService.GetFollowersUser(idUser);
@@ -36,18 +36,7 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("v1/get/suggestion/followers/{idFollowing}/{idUser}/{isProfile}")]
-        public async Task<IActionResult> GetSuggestionFollowers([FromRoute] int idFollowing, [FromRoute] int idUser, bool isProfile)
-        {
-            var result = await _userService.GetSuggestionForYouProfile(idFollowing, idUser, isProfile);
-            if (result.IsSucess)
-                return Ok(result);
-
-            return BadRequest(result);
-        }
-
-
-        [HttpGet("v1/followingfromuser/{idUser}")]
+        [HttpGet("v1/user/following/{idUser}")]
         public async Task<IActionResult> GetUsersFollowignByIdAsync([FromRoute] int idUser)
         {
             var result = await _userService.GetUsersFollowignByIdAsync(idUser);
@@ -57,20 +46,10 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("v1/userDesconnect/{email}")]
-        public async Task<IActionResult> UserDisconnected([FromRoute] string email)
+        [HttpGet("v1/user/followers/suggestion/{idFollowing}/{idUser}/{isProfile}")]
+        public async Task<IActionResult> GetSuggestionFollowers([FromRoute] int idFollowing, [FromRoute] int idUser, bool isProfile)
         {
-            var result = await _userService.UpdateLastDisconnectedTimeUser(email);
-            if (result.IsSucess)
-                return Ok(result);
-
-            return BadRequest(result);
-        }
-
-        [HttpGet("v1/userEmailDisconnected/{email}")]
-        public async Task<IActionResult> UserDisconnectedEmail([FromRoute] string email)
-        {
-            var result = await _userService.GetByEmailDisconnected(email);
+            var result = await _userService.GetSuggestionForYouProfile(idFollowing, idUser, isProfile);
             if (result.IsSucess)
                 return Ok(result);
 
@@ -98,7 +77,7 @@ namespace ProjectInsta.Api.Controllers
 
         }
 
-        [HttpGet("v1/userLogin/{email}/{password}")]
+        [HttpGet("v1/user/login/{email}/{password}")]
         public async Task<IActionResult> Login([FromRoute] string email, [FromRoute] string password)
         {
             var result = await _userService.Login(email, password);
@@ -108,7 +87,7 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("v1/userUpdate")]
+        [HttpPost("v1/user/update")]
         public async Task<IActionResult> Update([FromBody] UserDTO userDTO)
         {
             var result = await _userService.UpdateAsync(userDTO);
@@ -118,7 +97,7 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpPut("v1/update/perfilimg/{email}")]
+        [HttpPut("v1/user/update/imgperfil/{email}")]
         public async Task<IActionResult> UpdateImgUserPerfil([FromRoute] string email, [FromBody] ImagemBase64ProfileUserDTO imagemBase64ProfileUserDTO)
         {
             var result = await _userService.UpdateImgPerfilUser(email, imagemBase64ProfileUserDTO);
