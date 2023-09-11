@@ -89,8 +89,6 @@ namespace ProjectInsta.Infra.Data.Repositories
                 return userSuggestion;
             }
 
-
-
             //var allFollowers = _ctx
             //    .Follows
             //    .Where(x => x.FollowingId == idFollowing)
@@ -114,10 +112,18 @@ namespace ProjectInsta.Infra.Data.Repositories
 
             //var userProfile = userSuggestion.First(x => x.Id == idUser);
             //userSuggestion.Remove(userProfile);
+        }
 
+        public async Task<List<User>> GetSuggestionToShareReels(int idUser)
+        {
+            var suggestion = await _ctx.Users
+                .Where(x => x.Id != idUser &&
+                _ctx.Follows.Any(f => f.FollowingId == x.Id && f.FollowerId == idUser) &&
+                _ctx.Follows.Any(f => f.FollowerId == x.Id && f.FollowingId == idUser))
+                .Select(u => new User(u.Id, u.Name, u.Email, u.ImagePerfil))
+                .ToListAsync();
 
-
-
+            return suggestion;
         }
 
         public async Task<List<User?>> GetUsersFollowignByIdAsync(int idUser)

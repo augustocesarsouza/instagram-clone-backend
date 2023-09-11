@@ -9,6 +9,7 @@ namespace ProjectInsta.Domain.Repositories
         public Task<User?> GetByEmailCheckUser(string email);
         public Task<List<User>> GetFollowersUser(int userId);
         public Task<HashSet<User>> GetSuggestionForYouProfile(int idFollowing, int idUser, bool isProfile);
+        public Task<List<User>> GetSuggestionToShareReels(int idUser);
         public Task<List<User?>> GetUsersFollowignByIdAsync(int idUser);
         public Task<User?> GetByEmail(string email);
         public Task<User?> GetByEmailSignalR(string email);

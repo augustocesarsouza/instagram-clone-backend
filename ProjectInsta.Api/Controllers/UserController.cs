@@ -56,6 +56,16 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet("v1/user/following-followers/suggestion/story/{idUser}")]
+        public async Task<IActionResult> GetSuggestionToShareReels([FromRoute] int idUser)
+        {
+            var result = await _userService.GetSuggestionToShareReels(idUser);
+            if (result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
         [HttpPost("v1/user")]
         public async Task<IActionResult> PostAsync(
             [FromBody] UserDTO userDTO)

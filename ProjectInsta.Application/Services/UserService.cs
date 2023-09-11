@@ -63,6 +63,13 @@ namespace ProjectInsta.Application.Services
             return ResultService.Ok(_mapper.Map<HashSet<UserFollowersDTOs>>(userFollowings));
         }
 
+        public async Task<ResultService<List<UserFollowersDTOs>>> GetSuggestionToShareReels(int idUser)
+        {
+            var listSuggestion = await _userRepostitory.GetSuggestionToShareReels(idUser);
+
+            return ResultService.Ok(_mapper.Map<List<UserFollowersDTOs>>(listSuggestion));
+        }
+
         public async Task<ResultService<List<UserFollowingDTOs>>> GetUsersFollowignByIdAsync(int idUser)
         {
             var user = await _userRepostitory.GetUsersFollowignByIdAsync(idUser);

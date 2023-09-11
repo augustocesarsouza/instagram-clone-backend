@@ -58,7 +58,7 @@ namespace ProjectInsta.Application.MyHubs
                     listUser.Add(new UserIsOnline
                     {
                         Email = email,
-                        IsOnline = !string.IsNullOrEmpty(senderConnection) ? true : false,
+                        IsOnline = string.IsNullOrEmpty(senderConnection) ? false : true,
                     });
             }
             await Clients.Client(Context.ConnectionId).SendAsync("IsOnline", listUser);
