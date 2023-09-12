@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using ProjectInsta.Application.DTOs;
 using ProjectInsta.Application.DTOs.UserDTOsReturn;
-using ProjectInsta.Application.Services.Interfaces;
 using ProjectInsta.Domain.Entities;
 
 namespace ProjectInsta.Application.Mappings
@@ -33,6 +32,8 @@ namespace ProjectInsta.Application.Mappings
                 });
 
             CreateMap<PermissionDTO, Permission>();
+            CreateMap<MessageReelDTO, MessageReel>();
+
         }
     }
 }
