@@ -17,18 +17,12 @@ namespace ProjectInsta.Infra.Data.Repositories
 
         public async Task<User?> GetUserDataOnly(int idUser)
         {
-            return await _ctx.Users
+            var user = await _ctx.Users
                 .Where(x => x.Id == idUser)
                 .Select(x => new User(x.Id, x.Name, x.Email, x.ImagePerfil))
                 .FirstOrDefaultAsync();
 
-            //.Select(x => new User
-            // {
-            //     Id = x.Id,
-            //     Name = x.Name,
-            //     Email = x.Email,
-            //     ImagePerfil = x.ImagePerfil
-            // })
+            return user;
         }
 
         public async Task<User?> GetByEmailIsOnlineAsync(string email)
