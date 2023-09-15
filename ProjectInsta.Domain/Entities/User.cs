@@ -39,6 +39,12 @@ namespace ProjectInsta.Domain.Entities
             ImagePerfil = imagePerfil;
         }
 
+        public User(string name, string imagePerfil)
+        {
+            Name = name;
+            ImagePerfil = imagePerfil;
+        }
+
         public User(int id, string name, string email, string imagePerfil)
         {
             Id = id;

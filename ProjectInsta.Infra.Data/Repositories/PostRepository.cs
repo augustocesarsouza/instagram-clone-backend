@@ -15,6 +15,14 @@ namespace ProjectInsta.Infra.Data.Repositories
             _ctx = ctx;
         }
 
+        public async Task<Post?> GetOnlyNameAndImgUserByPostIdToMessage(int postId)
+        {
+            var user = await _ctx
+                .Posts.Where(p => p.Id == postId).Select(x => new Post(x.Id, new User(x.User.Name, x.User.ImagePerfil))).FirstOrDefaultAsync();
+
+            return user;
+        }
+
         public async Task<ICollection<Post>> GetAllPostAsync()
         {
             var posts = await _ctx
@@ -103,13 +111,34 @@ namespace ProjectInsta.Infra.Data.Repositories
 
         public async Task<ICollection<Post>> GetPostByAythorIdAsync(int authorId)
         {
+            //return await _ctx
+            //    .Posts
+            //    .Where(x => x.AuthorId == authorId)
+            //    .OrderByDescending (x => x.Id)
+            //    .Select(x => new Post(x.Id, x.Url, x.IsImagem,
+            //    new User(x.User.Id, x.User.Name, x.User.ImagePerfil)))
+            //    .ToListAsync();
+
             return await _ctx
                 .Posts
                 .Where(x => x.AuthorId == authorId)
-                .OrderByDescending (x => x.Id)
-                .Select(x => new Post(x.Id, x.Title, x.Url, x.AuthorId, x.IsImagem,
-                new User(x.User.Id, x.User.Name, x.User.ImagePerfil)))
+                .OrderByDescending(x => x.Id)
+                .Select(x => new Post(x.Id, x.Url, x.IsImagem))
                 .ToListAsync();
+        }
+
+        public async Task<Post?> GetVideoToReelInfo(int reelId)
+        {
+            var reelInfo = await _ctx
+                .Posts
+                .Include(x => x.Comments)
+                .Where(r => r.Id == reelId)
+                .Select(x =>
+                new Post(x.Id, x.Url,
+                new User(x.User.Id, x.User.Name, x.User.ImagePerfil), x.PostLikes.Count(), x.Comments.Count(),
+                x.PostLikes.Select(x => new PostLike(x.PostId, x.AuthorId)).ToList())).FirstOrDefaultAsync();
+
+            return reelInfo;
         }
 
         public async Task<Post> CreatePostAsync(Post post)

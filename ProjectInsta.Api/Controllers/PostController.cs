@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectInsta.Application.DTOs;
+using ProjectInsta.Application.Services;
 using ProjectInsta.Application.Services.Interfaces;
 
 namespace ProjectInsta.Api.Controllers
@@ -12,6 +13,16 @@ namespace ProjectInsta.Api.Controllers
         public PostController(IPostService postService)
         {
             _postService = postService;
+        }
+
+        [HttpGet("v1/post/data/to/message/{postId}")]
+        public async Task<IActionResult> GetOnlyNameAndImgUserByPostIdToMessage([FromRoute] int postId)
+        {
+            var result = await _postService.GetOnlyNameAndImgUserByPostIdToMessage(postId);
+            if (result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
         }
 
         [HttpGet("v1/post/all")]
@@ -54,10 +65,31 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet("v1/post/video/info/{reelId}")]
+        public async Task<IActionResult> GetVideoToReelInfo([FromRoute] int reelId)
+        {
+            var result = await _postService.GetVideoToReelInfo(reelId);
+
+            if (result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
         [HttpPost("v1/post")]
         public async Task<IActionResult> CreatePostAsync([FromBody] PostDTO postDTO)
         {
             var result = await _postService.CreatePostAsync(postDTO);
+            if (result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
+        [HttpPost("v1/post/create/video/{positionY}")]
+        public async Task<IActionResult> CreatePostVideoAsync([FromBody] PostDTO postDTO, [FromRoute] int positionY)
+        {
+            var result = await _postService.CreatePostVideoAsync(postDTO, positionY);
             if (result.IsSucess)
                 return Ok(result);
 

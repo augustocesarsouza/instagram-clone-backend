@@ -14,9 +14,16 @@ namespace ProjectInsta.Infra.Data.Repositories
             _context = context;
         }
 
+        public async Task<Message?> GetById(int idMessagfe)
+        {
+            var message = await _context.Messages.Where(m => m.Id == idMessagfe).FirstOrDefaultAsync();
+
+            return message;
+        }
+
         public async Task<ICollection<Message>> GetAllMessageSenderUserForRecipientUserAsyncPagaginada(int senderUserId, int recipientUserId, int pagina, int registroPorPagina)
         {
-            var messages = await _context
+            var messages = await _context // tem que verificar se a mensagem tem reel associado
                 .Messages
                 .Where(x => x.SenderId == senderUserId && x.RecipientId == recipientUserId)
                 .Concat(_context.Messages.Where(x => x.SenderId == recipientUserId && x.RecipientId == senderUserId))
@@ -36,6 +43,12 @@ namespace ProjectInsta.Infra.Data.Repositories
             return message;
         }
 
-        
+        public async Task<Message> DeleteAsync(Message message)
+        {
+            _context.Messages.Remove(message);
+            await _context.SaveChangesAsync();
+
+            return message;
+        }
     }
 }

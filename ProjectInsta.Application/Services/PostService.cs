@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Microsoft.Extensions.Hosting;
 using ProjectInsta.Application.CloudinaryAAA;
 using ProjectInsta.Application.DTOs;
 using ProjectInsta.Application.DTOs.Validations.PostValidator;
 using ProjectInsta.Application.Services.Interfaces;
 using ProjectInsta.Domain.Entities;
 using ProjectInsta.Domain.Repositories;
+using ProjectInsta.Infra.Data.Repositories;
 
 namespace ProjectInsta.Application.Services
 {
@@ -33,6 +35,17 @@ namespace ProjectInsta.Application.Services
             _unitOfWork = unitOfWork;
             _postLikeService = postLikeService;
             _commentService = commentService;
+        }
+
+        public async Task<ResultService<PostDTO>> GetOnlyNameAndImgUserByPostIdToMessage(int postId) 
+        {
+            var user = await _postRepository.GetOnlyNameAndImgUserByPostIdToMessage(postId);
+
+            if (user == null)
+                return ResultService.Fail<PostDTO>("Usuario não Localizado");
+
+            return ResultService.Ok(_mapper.Map<PostDTO>(user));
+
         }
 
         public async Task<ResultService<ICollection<PostDTO>>> GetAllPostsAsync()
@@ -63,6 +76,16 @@ namespace ProjectInsta.Application.Services
             return ResultService.Ok(_mapper.Map<ICollection<PostDTO>>(videosReels));
         }
 
+        public async Task<ResultService<PostDTO>> GetVideoToReelInfo(int reelId)
+        {
+            var reelInfo = await _postRepository.GetVideoToReelInfo(reelId);
+
+            if (reelInfo == null)
+                return ResultService.Fail<PostDTO>("Erro em obter");
+
+            return ResultService.Ok(_mapper.Map<PostDTO>(reelInfo));
+        }
+
         public async Task<ResultService<PostDTO>> CreatePostAsync(PostDTO postDTO) // os tipo da imagens que podem entrar só do tamanho que eu quero
         {
             if (postDTO == null)
@@ -81,10 +104,6 @@ namespace ProjectInsta.Application.Services
                 var uploadparams = new ImageUploadParams()
                 {
                     File = new FileDescription(postDTO.Url),
-                    //transformation = new transformation()
-                    //.width(480)
-                    //.height(750)_account
-                    //.crop("fill").quality(100),
                     Transformation = new Transformation().Width(1080).Height(1080).Crop("fill").Quality(100),
                 };
 
@@ -95,7 +114,6 @@ namespace ProjectInsta.Application.Services
                 postDTO.PublicId = publicid;
                 postDTO.Url = imagemurl;
                 postDTO.IsImagem = 1;
-
 
                 try
                 {
@@ -112,18 +130,50 @@ namespace ProjectInsta.Application.Services
                     return ResultService.Fail<PostDTO>($"{ex.Message}");
                 }
             }
-            else if (postDTO.Url.StartsWith("data:video/"))
+            else
             {
+                return ResultService.Fail<PostDTO>("Tipo de conteúdo desconhecido.");
+            }
+        }
+
+        public async Task<ResultService<PostDTO>> CreatePostVideoAsync(PostDTO postDTO, int positionY) // os tipo da imagens que podem entrar só do tamanho que eu quero
+        {
+            if (postDTO == null)
+                return ResultService.Fail<PostDTO>("Objeto não deve ser null");
+
+            var validator = new PostDTOValidator().Validate(postDTO);
+            if (!validator.IsValid)
+                return ResultService.RequestError<PostDTO>("Erro de validação verifique as informações necessarias", validator);
+
+
+            var cloudinary = new Cloudinary(_account);
+
+            if (postDTO.Url.StartsWith("data:video/"))
+            {
+                var resultCalc = 0;
+                if (positionY < 0)
+                {
+                    var valuePositiveY = Math.Abs(positionY);
+                    resultCalc = valuePositiveY + 442;
+                }else if(positionY >= 0)
+                {
+                    resultCalc = Math.Abs((positionY + positionY) - 442);
+                }
+
                 var uploadParams = new VideoUploadParams()
                 {
                     File = new FileDescription(postDTO.Url),
                     Transformation = new Transformation()
-                    .Width(1080)
-                    .Height(1080)
+                    .Width(883)
+                    .Height(883)
                     .VideoCodec("auto")
                     .Crop("fill")
-                    .Quality(80),
+                    .Quality(80)
+                    .X(0).Y(resultCalc)
                 };
+                // se for negativo fica potivo tipo -143 pega esse valor e faz 143 + 442 vai dar 584,5 no caso ele vai ir pra baixo porque
+                // valor positivo se vier +138, faz assim 138 + 138 = 276 esse valor menos 441,5 = 165,5
+                // 0 e mais pra cima, e 883 e o mais pra baixo
 
                 var uploadResult = await cloudinary.UploadAsync(uploadParams);
                 string publicId = uploadResult.PublicId;
@@ -150,9 +200,8 @@ namespace ProjectInsta.Application.Services
             }
             else
             {
-                return ResultService.Fail<PostDTO>("Tipo de conteúdo desconhecido.");
+                return ResultService.Fail<PostDTO>("Só permitido tipo video");
             }
-
         }
 
         public async Task<ResultService<PostDTO>> DeletePostAsync(int id)

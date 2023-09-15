@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using ProjectInsta.Application.CloudinaryAAA;
 using ProjectInsta.Application.DTOs;
 using ProjectInsta.Application.DTOs.Validations.MessageValidator;
 using ProjectInsta.Application.Services.Interfaces;
@@ -12,6 +15,12 @@ namespace ProjectInsta.Application.Services
         private readonly IMessageRepository _messageRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+
+        private readonly Account _account = new Account(
+           CloudinaryConfig.AccountName,
+           CloudinaryConfig.ApiKey,
+           CloudinaryConfig.ApiSecret
+           );
 
         public MessageService(IMessageRepository messageRepository, IMapper mapper, IUnitOfWork unitOfWork)
         {
@@ -29,6 +38,7 @@ namespace ProjectInsta.Application.Services
             return ResultService.Ok(_mapper.Map<ICollection<MessageDTO>>(message));
         }
 
+
         public async Task<ResultService<MessageDTO>> CreateAsync(MessageDTO messageDTO)
         {
             if (messageDTO == null)
@@ -44,6 +54,40 @@ namespace ProjectInsta.Application.Services
 
                 var data = await _messageRepository.CreateAsync(_mapper.Map<Message>(messageDTO));
                 await _unitOfWork.Commit();
+
+                return ResultService.Ok(_mapper.Map<MessageDTO>(data));
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.Rollback();
+                return ResultService.Fail<MessageDTO>($"{ex.Message}");
+            }
+        }
+
+        public async Task<ResultService<MessageDTO>> DeleteAsync(int idMessage)
+        {
+            if (idMessage <= 0)
+                return ResultService.Fail<MessageDTO>("Id deve ser maior que zero");
+
+            var messageDelete = await _messageRepository.GetById(idMessage);
+
+            if(messageDelete == null)
+                return ResultService.Fail<MessageDTO>("Não existe essa message");
+
+            try
+            {
+                await _unitOfWork.BeginTransaction();
+
+                var data = await _messageRepository.DeleteAsync(_mapper.Map<Message>(messageDelete));
+                await _unitOfWork.Commit();
+
+                if (data.UrlFrameReel != null)
+                {
+                    var cloudinary = new Cloudinary(_account);
+
+                    var destroyParams = new DeletionParams(data.PublicIdFrameReel) { ResourceType = ResourceType.Image };
+                    await cloudinary.DestroyAsync(destroyParams);
+                }
 
                 return ResultService.Ok(_mapper.Map<MessageDTO>(data));
             }

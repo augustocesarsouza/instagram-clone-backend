@@ -7,5 +7,6 @@ namespace ProjectInsta.Application.Services.Interfaces
     {
         public Task<ResultService<ICollection<MessageDTO>>> GetAllMessageSenderUserForRecipientUserAsyncPagaginada(int senderUserId, int recipientUserId, int pagina, int registroPorPagina);
         public Task<ResultService<MessageDTO>> CreateAsync(MessageDTO messageDTO);
+        public Task<ResultService<MessageDTO>> DeleteAsync(int idMessage);
     }
 }

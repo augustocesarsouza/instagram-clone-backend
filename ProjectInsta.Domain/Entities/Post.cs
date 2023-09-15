@@ -30,6 +30,18 @@ namespace ProjectInsta.Domain.Entities
             Url = url;
         }
 
+        public Post(int id, string url)
+        {
+            Id = id;
+            Url = url;
+        }
+
+        public Post(int id, User user)
+        {
+            Id = id;
+            User = user;
+        }
+
         public Post(int id, string title, string url, string? publicId, int isImagem, int? counterOfLikes, int? authorId) : this(id, title, url)
         {
             PublicId = publicId;
@@ -37,17 +49,17 @@ namespace ProjectInsta.Domain.Entities
             CounterOfLikes = counterOfLikes;
             AuthorId = authorId;
         }
-
-        public Post(int id, string title, string url, int? authorId, int isImagem, User user) : this(id, title, url)
+        
+        public Post(int id, string url, int isImagem) : this(id, url)
         {
-            AuthorId = authorId;
-            User = user;
             IsImagem = isImagem;
         }
 
         public Post(int id, string title, string url, User user, int? postLikesCounts, ICollection<PostLike> postLikes) : this(id, title, url)
         {
             User = user;
+            PostLikesCounts = postLikesCounts;
+            PostLikes = postLikes;
         }
 
         public Post(int id, string title, string url, string? publicId, int? authorId, int isImagem) : this(id, title, url)
@@ -92,6 +104,14 @@ namespace ProjectInsta.Domain.Entities
         public Post(int id, string title, string url, ICollection<Comment> comments) : this(id, title, url)
         {
             Comments = comments;
+        }
+
+        public Post(int id, string url, User user, int? postLikesCounts, int? commentsLikes, ICollection<PostLike> postLikes) : this(id, url)
+        {
+            User = user;
+            PostLikes = postLikes;
+            CommentsLikes = commentsLikes;
+            PostLikesCounts = postLikesCounts;
         }
 
         public void CountNumberOfLikes()

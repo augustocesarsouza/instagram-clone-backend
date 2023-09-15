@@ -5,10 +5,15 @@
         public int SenderId { get; set; }
         public int RecipientId { get; set; }
 
-        public string SenderEmail { get; set; }
-        public string RecipientEmail { get; set; }
+        public string? SenderEmail { get; set; }
+        public string? RecipientEmail { get; set; }
+        
+        public int? ReelId { get; set; }
 
-        public string Content { get; set; }
-        //public DateTime Timestamp { get; set; }
+        public string? UrlFrameReel { get; set; }
+        public string? PublicIdFrameReel { get; set; }
+
+        public string? Content { get; set; }
+        public DateTime? Timestamp { get; set; }
     }
 }

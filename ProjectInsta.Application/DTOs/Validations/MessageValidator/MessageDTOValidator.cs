@@ -6,11 +6,6 @@ namespace ProjectInsta.Application.DTOs.Validations.MessageValidator
     {
         public MessageDTOValidator()
         {
-            RuleFor(x => x.Content)
-                .NotEmpty()
-                .NotNull()
-                .WithMessage("Deve ser informado um texto para mensagem");
-
             RuleFor(x => x.SenderId)
                 .GreaterThan(0)
                 .NotNull()

@@ -17,12 +17,32 @@ namespace ProjectInsta.Infra.Data.Maps
                 .HasColumnName("Id");
 
             builder.Property(x => x.Content)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("Content");
 
             builder.Property(x => x.Timestamp)
                 .IsRequired()
                 .HasColumnName("Timestamp");
+
+            builder.Property(x => x.SenderId)
+               .IsRequired()
+               .HasColumnName("SenderId");
+
+            builder.Property(x => x.RecipientId)
+               .IsRequired()
+               .HasColumnName("RecipientId");
+
+            builder.Property(x => x.ReelId)
+                .IsRequired(false)
+                .HasColumnName("ReelId");
+
+            builder.Property(x => x.UrlFrameReel)
+                .IsRequired(false)
+                .HasColumnName("UrlFrameReel");
+
+            builder.Property(x => x.PublicIdFrameReel)
+               .IsRequired(false)
+               .HasColumnName("PublicIdFrameReel");
 
             builder.HasOne(x => x.SenderUser)
                 .WithMany(x => x.SenderMessage);

@@ -4,11 +4,13 @@ namespace ProjectInsta.Domain.Repositories
 {
     public interface IPostRepository
     {
+        public Task<Post?> GetOnlyNameAndImgUserByPostIdToMessage(int postId);
         public Task<ICollection<Post>> GetAllPostAsync();
         public Task<Post> GetByIdAsync(int id);
         public Task<Post> GetCheckUserPost(int authorId);
         public Task<ICollection<Post>> GetThreeLastPostAsync(int userId);
         public Task<ICollection<Post>> GetPostByAythorIdAsync(int authorId);
+        public Task<Post?> GetVideoToReelInfo(int reelId);
         public Task<ICollection<Post>> GetVideosForReels();
         public Task<Post> CreatePostAsync(Post post);
         public Task<Post> UpdatePostAsync(Post post);

@@ -34,5 +34,15 @@ namespace ProjectInsta.Api.Controllers
 
             return BadRequest(result);
         }
+
+        [HttpDelete("v1/message/{idMessage}")]
+        public async Task<ActionResult> DeleteAsync([FromRoute] int idMessage)
+        {
+            var result = await _messageService.DeleteAsync(idMessage);
+            if(result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
     }
 }

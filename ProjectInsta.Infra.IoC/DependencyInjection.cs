@@ -53,7 +53,7 @@ namespace ProjectInsta.Infra.IoC
             services.AddScoped<IStoryVisualizedService, StoryVisualizedService>();
             services.AddScoped<IFriendRequestService, FriendRequestService>();
             services.AddScoped<IPropertyTextService, PropertyTextService>();
-            services.AddScoped<ICreateImgStoryProcess, CreateImgStoryProcessService>();
+            services.AddScoped<ICreateImgProcess, CreateImgProcessService>();
             services.AddScoped<IUserPermissionService, UserPermissionService>();
             return services;
         }
