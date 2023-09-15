@@ -150,7 +150,7 @@ namespace ProjectInsta.Application.Services
 
             if (postDTO.Url.StartsWith("data:video/"))
             {
-                var resultCalc = 0;
+                var resultCalc = 0; // ver isso depois
                 if (positionY < 0)
                 {
                     var valuePositiveY = Math.Abs(positionY);
@@ -168,7 +168,7 @@ namespace ProjectInsta.Application.Services
                     .Height(883)
                     .VideoCodec("auto")
                     .Crop("fill")
-                    .Quality(80)
+                    .Quality(90)
                     .X(0).Y(resultCalc)
                 };
                 // se for negativo fica potivo tipo -143 pega esse valor e faz 143 + 442 vai dar 584,5 no caso ele vai ir pra baixo porque

@@ -32,7 +32,6 @@ namespace ProjectInsta.Application.Mappings
                 });
 
             CreateMap<PermissionDTO, Permission>();
-            CreateMap<MessageReelDTO, MessageReel>();
 
         }
     }

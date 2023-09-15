@@ -332,8 +332,6 @@ namespace ProjectInsta.Application.Mappings
                 });
 
             CreateMap<PropertyText, PropertyTextDTO>();
-
-            CreateMap<MessageReel, MessageReelDTO>();
         }
     }
 }

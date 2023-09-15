@@ -24,7 +24,6 @@ namespace ProjectInsta.Infra.Data.Context
         public DbSet<Story> Stories{ get; set; }
         public DbSet<StoryVisualized> StoryVisualizeds{ get; set; }
         public DbSet<PropertyText> PropertyTexts { get; set; }
-        public DbSet<MessageReel> MessageReels { get; set; }
         public DbSet<UserPermission> UserPermissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
