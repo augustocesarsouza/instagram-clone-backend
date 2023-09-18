@@ -14,9 +14,9 @@ namespace ProjectInsta.Infra.Data.Repositories
             _context = context;
         }
 
-        public async Task<Message?> GetById(int idMessagfe)
+        public async Task<Message?> GetById(int idMessage)
         {
-            var message = await _context.Messages.Where(m => m.Id == idMessagfe).FirstOrDefaultAsync();
+            var message = await _context.Messages.Where(m => m.Id == idMessage).FirstOrDefaultAsync();
 
             return message;
         }
@@ -38,6 +38,14 @@ namespace ProjectInsta.Infra.Data.Repositories
         public async Task<Message> CreateAsync(Message message)
         {
             await _context.Messages.AddAsync(message);
+            await _context.SaveChangesAsync();
+
+            return message;
+        }
+
+        public async Task<Message> UpdateAsync(Message message)
+        {
+            _context.Messages.Update(message);
             await _context.SaveChangesAsync();
 
             return message;

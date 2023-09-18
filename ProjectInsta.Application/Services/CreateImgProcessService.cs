@@ -16,25 +16,19 @@ namespace ProjectInsta.Application.Services
 
         public static List<ProcessImgDTO> ProcessImgDTOs = new();
 
-        public async Task<ResultService<ProcessImgDTO>> ProcessImgCreateFrameReelToMessage(ProcessImgDTO processImgDTO)
+        public async Task<ResultService<ProcessImgDTO>> ProcessImgCreateToProfileVideos(ProcessImgDTO processImgDTO) //Apagar depois
         {
             var cloudinary = new Cloudinary(_account);
 
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(processImgDTO.Url),
-                Transformation = new Transformation().Width(542).Height(871).Crop("fill").Quality(100),
+                Transformation = new Transformation().Width(656).Height(656).Crop("fill").Quality(100),
             };
 
             var uploadResult = await cloudinary.UploadAsync(uploadParams);
             string publicId = uploadResult.PublicId;
             var imagemUrl = cloudinary.Api.UrlImgUp.BuildUrl(publicId);
-
-            //var precessedImg = new ProcessImgDTO { 
-            //    Url = imagemUrl,
-            //    PublicId = publicId,
-            //    IsStory = false,
-            //};
 
             processImgDTO.PublicId = publicId;
             processImgDTO.Url = imagemUrl;

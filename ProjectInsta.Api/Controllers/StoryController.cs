@@ -15,9 +15,9 @@ namespace ProjectInsta.Api.Controllers
         }
 
         [HttpGet("v1/story/user/all/{idCreator}")]
-        public async Task<IActionResult> GetByIdAsync([FromRoute] int userCreatePost)
+        public async Task<IActionResult> GetByIdAsync([FromRoute] int idCreator)
         {
-            var result = await _storyService.GetByUserIdAsync(userCreatePost);
+            var result = await _storyService.GetByUserIdAsync(idCreator);
             if(result.IsSucess)
                 return Ok(result);
 

@@ -15,16 +15,6 @@ namespace ProjectInsta.Api.Controllers
             _postService = postService;
         }
 
-        [HttpGet("v1/post/data/to/message/{postId}")]
-        public async Task<IActionResult> GetOnlyNameAndImgUserByPostIdToMessage([FromRoute] int postId)
-        {
-            var result = await _postService.GetOnlyNameAndImgUserByPostIdToMessage(postId);
-            if (result.IsSucess)
-                return Ok(result);
-
-            return BadRequest(result);
-        }
-
         [HttpGet("v1/post/all")]
         public async Task<IActionResult> GetAllPostsAsync()
         {
@@ -86,10 +76,10 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("v1/post/create/video/{positionY}")]
-        public async Task<IActionResult> CreatePostVideoAsync([FromBody] PostDTO postDTO, [FromRoute] int positionY)
+        [HttpPost("v1/post/create/video/{positionY}/{isProfile}")]
+        public async Task<IActionResult> CreatePostVideoAsync([FromBody] PostDTO postDTO, [FromRoute] int positionY, [FromRoute] bool isProfile)
         {
-            var result = await _postService.CreatePostVideoAsync(postDTO, positionY);
+            var result = await _postService.CreatePostVideoAsync(postDTO, positionY, isProfile);
             if (result.IsSucess)
                 return Ok(result);
 

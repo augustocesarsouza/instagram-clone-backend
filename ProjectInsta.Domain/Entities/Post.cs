@@ -10,6 +10,7 @@ namespace ProjectInsta.Domain.Entities
         public string? PublicId { get; private set; }
         public int IsImagem { get; private set; }
         public int? CounterOfLikes { get; private set; }
+        public string? ImgFrameVideoUrl { get; private set; }
 
         public int? AuthorId { get; private set; }
         public User User { get; private set; }
@@ -50,8 +51,11 @@ namespace ProjectInsta.Domain.Entities
             AuthorId = authorId;
         }
         
-        public Post(int id, string url, int isImagem) : this(id, url)
+        public Post(int id, string url, string? imgFrameVideoUrl, int isImagem)
         {
+            Id = id;
+            Url = url;
+            ImgFrameVideoUrl = imgFrameVideoUrl;
             IsImagem = isImagem;
         }
 
@@ -74,8 +78,9 @@ namespace ProjectInsta.Domain.Entities
             Validator(title, url, publicId, authorId);
         }
 
-        public Post(int id, string title, string url, User user, int? postLikesCounts, int? commentsLikes, ICollection<PostLike> postLikes) : this(id, title, url)
+        public Post(int id, string title, string url, string? imgFrameVideoUrl, User user, int? postLikesCounts, int? commentsLikes, ICollection<PostLike> postLikes) : this(id, title, url)
         {
+            ImgFrameVideoUrl = imgFrameVideoUrl;
             User = user;
             PostLikesCounts = postLikesCounts;
             CommentsLikes = commentsLikes;

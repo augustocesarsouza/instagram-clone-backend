@@ -48,6 +48,8 @@ namespace ProjectInsta.Application.Services
             if (!validator.IsValid)
                 return ResultService.RequestError<MessageDTO>("Erro de validação", validator);
 
+            messageDTO.AlreadySeeThisMessage = 0;
+
             try
             {
                 await _unitOfWork.BeginTransaction();
@@ -64,6 +66,32 @@ namespace ProjectInsta.Application.Services
             }
         }
 
+        public async Task<ResultService<MessageDTO>> UpdateAsync(int messageId)
+        {
+            if (messageId <= 0)
+                return ResultService.Fail<MessageDTO>("Id do commentario deve ser maior que 0");
+
+            var message = await _messageRepository.GetById(messageId);
+            if (message == null)
+                return ResultService.Fail<MessageDTO>("Não encontrado Message");
+
+            message.AlreadySeeThisMessageMethodo();
+
+            try
+            {
+                await _unitOfWork.BeginTransaction();
+                var data = await _messageRepository.UpdateAsync(_mapper.Map<Message>(message));
+                await _unitOfWork.Rollback();
+                return ResultService.Ok(_mapper.Map<MessageDTO>(data));
+
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.Rollback();
+                return ResultService.Fail<MessageDTO>($"{ex.Message}");
+            }
+        }
+
         public async Task<ResultService<MessageDTO>> DeleteAsync(int idMessage)
         {
             if (idMessage <= 0)
@@ -71,7 +99,7 @@ namespace ProjectInsta.Application.Services
 
             var messageDelete = await _messageRepository.GetById(idMessage);
 
-            if(messageDelete == null)
+            if (messageDelete == null)
                 return ResultService.Fail<MessageDTO>("Não existe essa message");
 
             try
@@ -85,8 +113,8 @@ namespace ProjectInsta.Application.Services
                 {
                     var cloudinary = new Cloudinary(_account);
 
-                    var destroyParams = new DeletionParams(data.PublicIdFrameReel) { ResourceType = ResourceType.Image };
-                    await cloudinary.DestroyAsync(destroyParams);
+                    //var destroyParams = new DeletionParams(data.PublicIdFrameReel) { ResourceType = ResourceType.Image };
+                    //await cloudinary.DestroyAsync(destroyParams);
                 }
 
                 return ResultService.Ok(_mapper.Map<MessageDTO>(data));

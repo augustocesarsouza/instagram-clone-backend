@@ -35,6 +35,16 @@ namespace ProjectInsta.Api.Controllers
             return BadRequest(result);
         }
 
+        [HttpPut("v1/message/update/{messageId}")]
+        public async Task<IActionResult> UpdateAsync([FromRoute] int messageId)
+        {
+            var result = await _messageService.UpdateAsync(messageId);
+            if(result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
         [HttpDelete("v1/message/{idMessage}")]
         public async Task<ActionResult> DeleteAsync([FromRoute] int idMessage)
         {

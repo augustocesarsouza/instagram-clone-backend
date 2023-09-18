@@ -14,10 +14,20 @@ namespace ProjectInsta.Api.Controllers
             _createImgProcess = createImgProcess;
         }
 
-        [HttpPost("v1/process/img/framevideo")]
-        public async Task<IActionResult> ProcessImgFrameVideoReel([FromBody] ProcessImgDTO processImgDTO)
+        [HttpPost("v1/process/img/story")]
+        public async Task<IActionResult> ProcessImgStory([FromBody] ProcessImgDTO processImgDTO)
         {
-            var result = await _createImgProcess.ProcessImgCreateFrameReelToMessage(processImgDTO);
+            var result = await _createImgProcess.ProcessImgStory(processImgDTO);
+            if (result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
+        [HttpPost("v1/process/img/framevideo/post")]
+        public async Task<IActionResult> ProcessImgCreateToProfileVideos([FromBody] ProcessImgDTO processImgDTO)
+        {
+            var result = await _createImgProcess.ProcessImgCreateToProfileVideos(processImgDTO);
             if (result.IsSucess)
                 return Ok(result);
 

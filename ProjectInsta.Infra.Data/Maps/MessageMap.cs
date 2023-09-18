@@ -40,9 +40,17 @@ namespace ProjectInsta.Infra.Data.Maps
                 .IsRequired(false)
                 .HasColumnName("UrlFrameReel");
 
-            builder.Property(x => x.PublicIdFrameReel)
-               .IsRequired(false)
-               .HasColumnName("PublicIdFrameReel");
+            builder.Property(x => x.NameUserCreateReel)
+                .IsRequired(false)
+                .HasColumnName("NameUserCreateReel");
+
+            builder.Property(x => x.ImagePerfilUserCreateReel)
+                .IsRequired(false)
+                .HasColumnName("ImagePerfilUserCreateReel");
+
+            builder.Property(x => x.AlreadySeeThisMessage)
+                .IsRequired(false)
+                .HasColumnName("AlreadySeeThisMessage");
 
             builder.HasOne(x => x.SenderUser)
                 .WithMany(x => x.SenderMessage);

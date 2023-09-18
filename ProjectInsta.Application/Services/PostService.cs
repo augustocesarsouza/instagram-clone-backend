@@ -37,17 +37,6 @@ namespace ProjectInsta.Application.Services
             _commentService = commentService;
         }
 
-        public async Task<ResultService<PostDTO>> GetOnlyNameAndImgUserByPostIdToMessage(int postId) 
-        {
-            var user = await _postRepository.GetOnlyNameAndImgUserByPostIdToMessage(postId);
-
-            if (user == null)
-                return ResultService.Fail<PostDTO>("Usuario não Localizado");
-
-            return ResultService.Ok(_mapper.Map<PostDTO>(user));
-
-        }
-
         public async Task<ResultService<ICollection<PostDTO>>> GetAllPostsAsync()
         {
             var post = await _postRepository.GetAllPostAsync();
@@ -115,10 +104,12 @@ namespace ProjectInsta.Application.Services
                 postDTO.Url = imagemurl;
                 postDTO.IsImagem = 1;
 
+                bool isProfile = false;
+
                 try
                 {
                     await _unitOfWork.BeginTransaction();
-                    var post = await _postRepository.CreatePostAsync(_mapper.Map<Post>(postDTO));
+                    var post = await _postRepository.CreatePostAsync(_mapper.Map<Post>(postDTO), isProfile);
                     await _unitOfWork.Commit();
                     return ResultService.Ok(_mapper.Map<PostDTO>(post));
                 }
@@ -136,7 +127,7 @@ namespace ProjectInsta.Application.Services
             }
         }
 
-        public async Task<ResultService<PostDTO>> CreatePostVideoAsync(PostDTO postDTO, int positionY) // os tipo da imagens que podem entrar só do tamanho que eu quero
+        public async Task<ResultService<PostDTO>> CreatePostVideoAsync(PostDTO postDTO, int positionY, bool isProfile)
         {
             if (postDTO == null)
                 return ResultService.Fail<PostDTO>("Objeto não deve ser null");
@@ -150,7 +141,7 @@ namespace ProjectInsta.Application.Services
 
             if (postDTO.Url.StartsWith("data:video/"))
             {
-                var resultCalc = 0; // ver isso depois
+                var resultCalc = 0;
                 if (positionY < 0)
                 {
                     var valuePositiveY = Math.Abs(positionY);
@@ -159,6 +150,8 @@ namespace ProjectInsta.Application.Services
                 {
                     resultCalc = Math.Abs((positionY + positionY) - 442);
                 }
+
+                //var publicId = "publicid_video_and_frame_of_video";
 
                 var uploadParams = new VideoUploadParams()
                 {
@@ -169,8 +162,9 @@ namespace ProjectInsta.Application.Services
                     .VideoCodec("auto")
                     .Crop("fill")
                     .Quality(90)
-                    .X(0).Y(resultCalc)
+                    .X(0).Y(resultCalc),
                 };
+                // Porque o dado que vem do react do front-end, vai ser assim, 0 meio, 255 Positivo é mais pra cima possivel, -255 Mais pra baixo possivel
                 // se for negativo fica potivo tipo -143 pega esse valor e faz 143 + 442 vai dar 584,5 no caso ele vai ir pra baixo porque
                 // valor positivo se vier +138, faz assim 138 + 138 = 276 esse valor menos 441,5 = 165,5
                 // 0 e mais pra cima, e 883 e o mais pra baixo
@@ -179,14 +173,28 @@ namespace ProjectInsta.Application.Services
                 string publicId = uploadResult.PublicId;
                 var videoUrl = cloudinary.Api.UrlVideoUp.BuildUrl(publicId);
 
+                var uploadImgFromFrameOfVideo = new ImageUploadParams()
+                {
+                    File = new FileDescription(postDTO.ImgFrameVideoUrl),
+                    Transformation = new Transformation()
+                    .Width(656).Height(656)
+                    .Crop("fill").Quality(100),
+                    Format = "jpg",
+                    PublicId = publicId
+                };
+
+                await cloudinary.UploadAsync(uploadImgFromFrameOfVideo);
+                var imagemUrl = cloudinary.Api.UrlImgUp.BuildUrl(publicId);
+
                 postDTO.PublicId = publicId;
                 postDTO.Url = videoUrl;
+                postDTO.ImgFrameVideoUrl = imagemUrl + ".jpg";
                 postDTO.IsImagem = 0;
 
                 try
                 {
                     await _unitOfWork.BeginTransaction();
-                    var post = await _postRepository.CreatePostAsync(_mapper.Map<Post>(postDTO));
+                    var post = await _postRepository.CreatePostAsync(_mapper.Map<Post>(postDTO), isProfile);
                     await _unitOfWork.Commit();
                     return ResultService.Ok(_mapper.Map<PostDTO>(post));
                 }
@@ -232,8 +240,10 @@ namespace ProjectInsta.Application.Services
                     }
                     else
                     {
-                        var destroyParams = new DeletionParams(postDeleted.PublicId) { ResourceType = ResourceType.Video };
-                        await cloudinary.DestroyAsync(destroyParams);
+                        var destroyParamsVideo = new DeletionParams(postDeleted.PublicId) { ResourceType = ResourceType.Video };
+                        var destroyParamsFrameImg = new DeletionParams(postDeleted.PublicId) { ResourceType = ResourceType.Image };
+                        await cloudinary.DestroyAsync(destroyParamsVideo);
+                        await cloudinary.DestroyAsync(destroyParamsFrameImg);
                     }
                 }
 

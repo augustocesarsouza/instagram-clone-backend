@@ -38,6 +38,10 @@ namespace ProjectInsta.Infra.Data.Maps
                 .IsRequired(false)
                 .HasColumnName("CounterOfLikes");
 
+            builder.Property(x => x.ImgFrameVideoUrl)
+                .IsRequired(false)
+                .HasColumnName("ImgFrameVideoUrl");
+
             builder.Ignore(x => x.PostLikesCounts);
             builder.Ignore(x => x.CommentsLikes);
 

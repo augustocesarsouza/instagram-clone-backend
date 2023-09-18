@@ -11,7 +11,9 @@
         public int? ReelId { get; set; }
 
         public string? UrlFrameReel { get; set; }
-        public string? PublicIdFrameReel { get; set; }
+        public string? NameUserCreateReel { get; set; }
+        public string? ImagePerfilUserCreateReel { get; set; }
+        public int? AlreadySeeThisMessage { get; set; }
 
         public string? Content { get; set; }
         public DateTime? Timestamp { get; set; }

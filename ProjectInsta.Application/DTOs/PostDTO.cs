@@ -10,6 +10,7 @@ namespace ProjectInsta.Application.DTOs
         public string? PublicId { get; set; }
         public int? IsImagem { get; set; }
         public int? CounterOfLikes { get; set; }
+        public string? ImgFrameVideoUrl { get; set; }
 
         public int? AuthorId { get; set; }
         

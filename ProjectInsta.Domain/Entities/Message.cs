@@ -16,7 +16,9 @@ namespace ProjectInsta.Domain.Entities
 
         public int? ReelId { get; private set; }
         public string? UrlFrameReel { get; private set; }
-        public string? PublicIdFrameReel { get; private set; }
+        public string? NameUserCreateReel { get; private set; }
+        public string? ImagePerfilUserCreateReel { get; private set; }
+        public int? AlreadySeeThisMessage { get; private set; }
 
         public Message(int senderId, int recipientId)
         {
@@ -27,6 +29,11 @@ namespace ProjectInsta.Domain.Entities
         public Message(string content, int senderId, int recipientId, int reelId) : this(content, senderId, recipientId)
         {
             ReelId = reelId;
+        }
+
+        public void AlreadySeeThisMessageMethodo()
+        {
+            AlreadySeeThisMessage = 1;
         }
 
         public Message(string content, int senderId, int recipientId)

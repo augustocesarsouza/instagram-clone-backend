@@ -89,10 +89,9 @@ namespace ProjectInsta.Application.MyHubs
 
         public async Task SendMessageReels(SignalRMessageDTO signalRMessageDTO)
         {
-            
             var recipientConnection = _connectionMapping.GetConnection(signalRMessageDTO.RecipientEmail);
 
-            await Clients.Client(recipientConnection).SendAsync("ReceiveReels", signalRMessageDTO, signalRMessageDTO.RecipientEmail);
+            await Clients.Client(recipientConnection).SendAsync("ReceiveReels", signalRMessageDTO);
 
         }
 
